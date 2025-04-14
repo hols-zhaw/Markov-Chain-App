@@ -108,7 +108,7 @@ st.session_state.matrix = matrix
 # --- Graph Rendering ---
 def render_markov_graph(matrix, states):
     net = Network(height="600px", width="100%", directed=True)
-    net.barnes_hut()
+    net.barnes_hut(spring_length=100, overlap=1)
     for state in states:
         net.add_node(state, label=state, font={"size": NODE_FONT_SIZE}, labelHighlightBold=True, physics=True)
     for i, from_state in enumerate(states):
@@ -191,18 +191,18 @@ elif visual_type == VISUALIZATION_OPTIONS["distribution"] and st.session_state.h
         ), use_container_width=True)
 
 elif visual_type == VISUALIZATION_OPTIONS["statistics"] and st.session_state.mean_plot_data is not None:
-    chains = st.session_state.mean_plot_data
+    chains = st.session_state.mean_plot_data + 1
     mean = chains.mean(axis=0)
     std = chains.std(axis=0)
     ci = 2.576 * std / np.sqrt(chains.shape[0])  # 99% CI
 
-    fig, ax = plt.subplots(figsize=(8, 3))
+    fig, ax = plt.subplots(figsize=(10, 4))
     ax.plot(mean, label="mean", color="blue")
     ax.fill_between(range(len(mean)), mean - std, mean + std, alpha=0.2, label="±1σ", color="blue")
     ax.fill_between(range(len(mean)), mean - ci, mean + ci, alpha=0.3, label="99% CI", color="gray")
     ax.set_xlim(0, len(mean) - 1)
     ax.set_xticks(range(0, len(mean), max(1, len(mean) // 10)))
-    ax.set_ylim(0, len(states) - 1)
+    ax.set_ylim(1, len(states))
     ax.set_xlabel("Time step")
     ax.set_ylabel("Mean state index")
     ax.set_title(f"Mean and confidence intervals of {chains.shape[0]} chains")
