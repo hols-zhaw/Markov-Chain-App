@@ -1,0 +1,16 @@
+name: markov_simulator
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - streamlit
+  - pandas
+  - numpy
+  - matplotlib
+  - networkx
+  - pyvis
+  - plotly
+  - pip
+  - pip:
+      - streamlit-option-menu
